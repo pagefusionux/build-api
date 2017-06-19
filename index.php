@@ -3,7 +3,6 @@
  * Queries Jenkins build server API to return build information.
  */
 
-
 // TODO: refactor to OO structure
 //require "Bapi.php";
 require "config.php"; // jenkins api credentials
