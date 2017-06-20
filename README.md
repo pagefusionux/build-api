@@ -2,12 +2,13 @@
 
 **Description**
 
-This app queries our Jenkins build server to return commit information and build status
-information.
+This app acts as an authentication proxy which uses cURL to query our Jenkins build server to 
+return build status information.
 
 **Setup**
 
-To query this API from a remote source, the URL format and options are as follows:
+The _build-status_ app (see https://github.com/pagefusionux/build-status) uses the
+following URL format to call this API:
 ````
 http://[this.bapi.domain]?host=[window.location.host]&option=status`)
 ````
