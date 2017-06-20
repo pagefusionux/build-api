@@ -12,13 +12,14 @@ class Bapi {
   public $api_token;
   public $get_host;
   public $get_option;
+  public $get_tree;
   public $api_project;
   public $api_branch;
 
   /**
    * @param string $api_uri
    */
-  public function __construct($api_url, $get_host, $get_option, $api_user, $api_token) {
+  public function __construct($api_url, $get_host, $get_option, $get_tree, $api_user, $api_token) {
     $this->error = 0;
     $this->error_reponse = 0;
     $this->api_url = $api_url;
@@ -26,6 +27,7 @@ class Bapi {
     $this->api_token = $api_token;
     $this->get_host = $get_host;
     $this->get_option = $get_option;
+    $this->get_tree = $get_tree;
     $this->api_project = $this->getProject();
     $this->api_branch = $this->getBranch();
   }
@@ -126,10 +128,14 @@ class Bapi {
   public function execute() {
 
     if ($this->get_option == "commits") { // commits
-      $api_tree = "";
+      $api_tree = "changeSets[*[*]]";
+      $full_req = $this->api_url . "/job/" . $this->api_project . "/job/" . $this->api_branch . "/lastBuild/api/json?tree=" . $api_tree;
 
-    } else { // build info
+    } else if ($this->get_option == "status") { // build info
       $api_tree = "number,result,duration,timestamp,estimatedDuration";
+      $full_req = $this->api_url . "/job/" . $this->api_project . "/job/" . $this->api_branch . "/lastBuild/api/json?tree=" . $api_tree;
+    } else {
+      $api_tree = $this->get_tree;
       $full_req = $this->api_url . "/job/" . $this->api_project . "/job/" . $this->api_branch . "/lastBuild/api/json?tree=" . $api_tree;
     }
 
@@ -152,11 +158,13 @@ class Bapi {
       $response_obj = json_decode($response);
 
       // add our own information onto object
-      $response_obj = (object) array_merge((array)$response_obj, array(
-        'host' => $this->get_host,
-        'project' => $this->api_project,
-        'branch' => $this->api_branch
-      ));
+      if ($this->get_option == "status") {
+        $response_obj = (object)array_merge((array)$response_obj, array(
+          'host' => $this->get_host,
+          'project' => $this->api_project,
+          'branch' => $this->api_branch
+        ));
+      }
       //echo '<pre>' . var_export($response_obj, true) . '</pre>';
 
       echo json_encode($response_obj);

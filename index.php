@@ -24,8 +24,15 @@ if (isset($_GET["option"])) { // options: status|commits
   $get_option = "status"; // default
 }
 
+// get tree
+if (isset($_GET["tree"])) { // options: status|commits
+  $get_tree = $_GET["tree"];
+} else {
+  $get_tree = ""; // default
+}
+
 // query the Jenkins server
-$bapi = new Bapi($api_url, $get_host, $get_option, $api_user, $api_token);
+$bapi = new Bapi($api_url, $get_host, $get_option, $get_tree, $api_user, $api_token);
 $response = $bapi->execute();
 
 // if no errors occurred, output response
