@@ -10,7 +10,7 @@ return build status information.
 The _build-status_ app (see https://github.com/pagefusionux/build-status) uses the
 following URL format to call this API:
 ````
-http://[this.bapi.domain]?host=[window.location.host]&option=status`)
+http://[this.bapi.domain]?host=[window.location.host]&option=status
 ````
 
 URL Parameter(s):
