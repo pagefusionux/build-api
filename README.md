@@ -15,7 +15,7 @@ http://[this.bapi.domain]?host=[window.location.host]&option=status
 
 URL Parameter(s):
 - host (required): taken programmatically from window.location.host from the remote source script
-- option: 'status' (default) or 'commits'; specifies the information to return from the server
+- option: 'status-commits' (default) or 'status'; specifies the information to return from the server
 
 **Note**
 

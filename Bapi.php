@@ -14,7 +14,7 @@ class Bapi {
   public $get_option;
   public $get_tree;
   public $api_project;
-  public $api_branch;
+  //public $api_branch;
 
   /**
    * @param string $api_uri
@@ -29,7 +29,7 @@ class Bapi {
     $this->get_option = $get_option;
     $this->get_tree = $get_tree;
     $this->api_project = $this->getProject();
-    $this->api_branch = $this->getBranch();
+    //$this->api_branch = $this->getBranch();
   }
 
   /**
@@ -106,6 +106,7 @@ class Bapi {
    *
    * @return string
    */
+  /*
   public function getBranch() {
     if ($this->get_host == "localhost:3000" || $this->get_host == "localhost.buildstatus" || preg_match("/\.dev\./", $this->get_host)) {
       $api_branch = 'dev';
@@ -117,6 +118,7 @@ class Bapi {
 
     return $api_branch;
   }
+  */
 
 
   /**
@@ -127,17 +129,18 @@ class Bapi {
    */
   public function execute() {
 
-    if ($this->get_option == "commits") { // commits
-      $api_tree = "changeSets[*[*]]";
-      $full_req = $this->api_url . "/job/" . $this->api_project . "/job/" . $this->api_branch . "/lastBuild/api/json?tree=" . $api_tree;
+    if ($this->get_option == "status-commits") { // status and commit info
+      $api_tree = "jobs[name,lastBuild[number,duration,timestamp,result,estimatedDuration,changeSets[items[date,commitId,msg,author[fullName],authorEmail,affectedPaths[*]]]]]";
 
-    } else if ($this->get_option == "status") { // build info
-      $api_tree = "number,result,duration,timestamp,estimatedDuration";
-      $full_req = $this->api_url . "/job/" . $this->api_project . "/job/" . $this->api_branch . "/lastBuild/api/json?tree=" . $api_tree;
-    } else {
+    } elseif ($this->get_tree) { // tree parameter passed over URL
       $api_tree = $this->get_tree;
-      $full_req = $this->api_url . "/job/" . $this->api_project . "/job/" . $this->api_branch . "/lastBuild/api/json?tree=" . $api_tree;
+
+    } else { // $this->get_option == "status" (default)
+      $api_tree = "jobs[name,lastBuild[number,duration,timestamp,result,estimatedDuration]]";
     }
+
+    //$full_req = $this->api_url . "/job/" . $this->api_project . "/job/" . $this->api_branch . "/lastBuild/api/json?tree=" . $api_tree;
+    $full_req = $this->api_url . "/job/" . $this->api_project . "/api/json?tree=" . $api_tree . "&pretty=true";
 
     // initialize cURL
     $curl = curl_init($full_req);
@@ -155,19 +158,38 @@ class Bapi {
 
     // output json response
     if ($response) {
-      $response_obj = json_decode($response);
+      $response_obj = json_decode($response, true); // decode into associative array
 
-      // add our own information onto object
-      if ($this->get_option == "status") {
-        $response_obj = (object)array_merge((array)$response_obj, array(
-          'host' => $this->get_host,
-          'project' => $this->api_project,
-          'branch' => $this->api_branch
-        ));
+      // filter; only output the info for the branches we want
+      $jobs_arr = $response_obj["jobs"];
+      $jobs_we_want = array('dev', 'hotfix', 'release', 'production'); // git branch names
+      $new_jobs_arr = array();
+
+      for ($i = 0; $i < count($jobs_arr); $i++) {
+        //echo $jobs_arr[$i]["name"] . "<br />";
+        if (in_array($jobs_arr[$i]["name"], $jobs_we_want)) {
+          $job_name = $jobs_arr[$i]["name"];
+          unset($jobs_arr[$i]["_class"]);
+          unset($jobs_arr[$i]["name"]);
+          unset($jobs_arr[$i]["lastBuild"]["_class"]);
+          //echo $jobs_arr[$i]["name"] . "<br />";
+          $new_jobs_arr[$job_name] = $jobs_arr[$i]; // re-organize stuff under 'name' of branch (for ease-of-use)
+        }
       }
-      //echo '<pre>' . var_export($response_obj, true) . '</pre>';
 
-      echo json_encode($response_obj);
+      // re-organize under 'branches' key (for ease-of-use)
+      $branches_arr["branches"] = $new_jobs_arr;
+
+      // merge some other information onto array and typecast to object
+      $new_response_obj = (object)array_merge(array(
+        'host' => $this->get_host,
+        'project' => $this->api_project
+      ), $branches_arr);
+
+      echo '<pre>' . var_export($new_response_obj, true) . '</pre>';
+
+      //echo json_encode($new_response_obj);
+
     } else {
       echo curl_error($curl);
     }

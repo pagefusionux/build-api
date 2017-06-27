@@ -4,6 +4,7 @@
  */
 
 require "config.php"; // jenkins api credentials
+require "JobFilter.php";
 require "Bapi.php";
 require "BapiError.php";
 
