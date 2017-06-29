@@ -4,7 +4,6 @@
  */
 
 require "config.php"; // jenkins api credentials
-require "JobFilter.php";
 require "Bapi.php";
 require "BapiError.php";
 
@@ -38,8 +37,15 @@ if (isset($_GET["tree"])) { // options: status|commits
   $get_tree = ""; // default
 }
 
+// get pretty parameter
+if (isset($_GET["pretty"])) { // options: status|commits
+  $get_pretty = $_GET["pretty"];
+} else {
+  $get_pretty = 0; // default
+}
+
 // query the Jenkins server
-$bapi = new Bapi($api_url, $get_host, $get_option, $get_tree, $api_user, $api_token);
+$bapi = new Bapi($api_url, $get_host, $get_option, $get_pretty, $get_tree, $api_user, $api_token);
 $response = $bapi->execute();
 
 // if no errors occurred, output response

@@ -12,6 +12,7 @@ class Bapi {
   public $api_token;
   public $get_host;
   public $get_option;
+  public $get_pretty;
   public $get_tree;
   public $api_project;
   //public $api_branch;
@@ -19,7 +20,7 @@ class Bapi {
   /**
    * @param string $api_uri
    */
-  public function __construct($api_url, $get_host, $get_option, $get_tree, $api_user, $api_token) {
+  public function __construct($api_url, $get_host, $get_option, $get_pretty, $get_tree, $api_user, $api_token) {
     $this->error = 0;
     $this->error_reponse = 0;
     $this->api_url = $api_url;
@@ -27,6 +28,7 @@ class Bapi {
     $this->api_token = $api_token;
     $this->get_host = $get_host;
     $this->get_option = $get_option;
+    $this->get_pretty = $get_pretty;
     $this->get_tree = $get_tree;
     $this->api_project = $this->getProject();
     //$this->api_branch = $this->getBranch();
@@ -120,7 +122,6 @@ class Bapi {
   }
   */
 
-
   /**
    * Executes a cURL request to the Jenkins build server which returns a json object
    * according to the jenkins 'path', and 'tree' parameters passed.
@@ -130,7 +131,8 @@ class Bapi {
   public function execute() {
 
     if ($this->get_option == "status-commits") { // status and commit info
-      $api_tree = "jobs[name,lastBuild[number,duration,timestamp,result,estimatedDuration,changeSets[items[date,commitId,msg,author[fullName],authorEmail,affectedPaths[*]]]]]";
+      // affectedPaths[*]
+      $api_tree = "jobs[name,lastBuild[number,duration,timestamp,result,estimatedDuration,changeSets[items[date,commitId,msg,author[fullName],authorEmail,paths[*]]]]]";
 
     } elseif ($this->get_tree) { // tree parameter passed over URL
       $api_tree = $this->get_tree;
@@ -166,13 +168,24 @@ class Bapi {
       $new_jobs_arr = array();
 
       for ($i = 0; $i < count($jobs_arr); $i++) {
-        //echo $jobs_arr[$i]["name"] . "<br />";
         if (in_array($jobs_arr[$i]["name"], $jobs_we_want)) {
           $job_name = $jobs_arr[$i]["name"];
-          unset($jobs_arr[$i]["_class"]);
+
           unset($jobs_arr[$i]["name"]);
+
+          // remove _class properties
+          unset($jobs_arr[$i]["_class"]);
           unset($jobs_arr[$i]["lastBuild"]["_class"]);
-          //echo $jobs_arr[$i]["name"] . "<br />";
+
+          if ($this->get_option == "status-commits") {
+            for ($j = 0; $j < count($jobs_arr[$i]["lastBuild"]["changeSets"]); $j++) {
+              unset($jobs_arr[$i]["lastBuild"]["changeSets"][$j]["_class"]);
+
+              for ($k = 0; $k < count($jobs_arr[$i]["lastBuild"]["changeSets"][$j]["items"]); $k++) {
+                unset($jobs_arr[$i]["lastBuild"]["changeSets"][$j]["items"][$k]["_class"]);
+              }
+            }
+          }
           $new_jobs_arr[$job_name] = $jobs_arr[$i]; // re-organize stuff under 'name' of branch (for ease-of-use)
         }
       }
@@ -186,9 +199,11 @@ class Bapi {
         'project' => $this->api_project
       ), $branches_arr);
 
-      echo '<pre>' . var_export($new_response_obj, true) . '</pre>';
-
-      //echo json_encode($new_response_obj);
+      if ($this->get_pretty) {
+        echo '<pre>' . var_export($new_response_obj, true) . '</pre>';
+      } else {
+        echo json_encode($new_response_obj);
+      }
 
     } else {
       echo curl_error($curl);
