@@ -28,21 +28,21 @@ if (isset($_GET["host"])) {
 }
 
 // get option parameter
-if (isset($_GET["option"])) { // options: status|commits
+if (isset($_GET["option"])) { // options: status|status-commits
   $get_option = $_GET["option"];
 } else {
   $get_option = "status"; // default
 }
 
 // get tree parameter
-if (isset($_GET["tree"])) { // options: status|commits
+if (isset($_GET["tree"])) {
   $get_tree = $_GET["tree"];
 } else {
   $get_tree = ""; // default
 }
 
-// get pretty parameter
-if (isset($_GET["pretty"])) { // options: status|commits
+// get pretty parameter (if set to 1, Jenkins API output is displayed in a more readable format)
+if (isset($_GET["pretty"])) {
   $get_pretty = $_GET["pretty"];
 } else {
   $get_pretty = 0; // default

@@ -12,7 +12,6 @@ following URL structure to call this API:
 ````
 http://[where.this.is.hosted]?host=[window.location.host]&option=status&pretty=0
 ````
-(the above structure may change if we decide to use a different URL format)
 
 URL Parameter(s):
 - host (required): taken programmatically from window.location.host from the remote source script
