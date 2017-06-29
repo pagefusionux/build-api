@@ -3,17 +3,21 @@
  * Queries Jenkins build server API to return build information.
  */
 
-require "config.php"; // jenkins api credentials
+if (file_exists("config.php")) {
+  require "config.php"; // jenkins api credentials
+
+} else {
+  // specify user credentials if config.php not available
+  /*
+  $api_user = "";
+  $api_token = "";
+  */
+}
+
 require "Bapi.php";
 require "BapiError.php";
 
-// specify user credentials if config.php not available
-/*
-$api_user = "";
-$api_token = "";
-*/
-
-// API URL
+// Jenkins API URL
 $api_url = "http://build.clearlink.com:8080";
 
 // get the hostname of the requesting (source) app
