@@ -72,7 +72,17 @@ class Bapi {
       "getcenturylink" => "v2-getcenturylink",
       "vivintsource" => "v2-vivintsource",
       "satelliteinternet" => "v2-satelliteinternet",
-      "usdirect" => "v2-usdirect"
+      "usdirect" => "v2-usdirect",
+
+      // internal
+      "safewise" => "v2-safewise",
+      "wecare.clearlink" => "v2-wecare.clearlink",
+      "ledgestone.texas" => "v2-ledgestone.texas-seniorliving",
+      "dancingriver" => "v2-dancingriver-seniorliving",
+      "confluence.clearlink" => "v2-confluence.clearlink",
+      "clearfork.texas" => "v2-clearfork.texas-seniorliving",
+      "arabella-athens" => "v2-arabella-athens-seniorliving",
+      "acadiaestates" => "v2-acadiaestates-seniorliving"
     );
 
     try {
