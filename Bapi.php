@@ -66,6 +66,8 @@ class Bapi {
       "amigoenergyplans" => "v2-amigoenergyplans",
       "justenergy" => "v2-justenergy",
       "taraenergy" => "v2-taraenergy",
+      "hudsonenergy" => "v2-hudsonenergy",
+      "sunrunhomesolar" => "v2-sunrunhomesolar",
 
       // sat/sec
       "centurylinkquote" => "v2-centurylinkquote",
@@ -82,7 +84,9 @@ class Bapi {
       "confluence.clearlink" => "v2-confluence.clearlink",
       "clearfork.texas" => "v2-clearfork.texas-seniorliving",
       "arabella-athens" => "v2-arabella-athens-seniorliving",
-      "acadiaestates" => "v2-acadiaestates-seniorliving"
+      "acadiaestates" => "v2-acadiaestates-seniorliving",
+      "highspeedinternet" => "v2-highspeedinternet"
+
     );
 
     try {
