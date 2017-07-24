@@ -75,6 +75,7 @@ class Bapi {
       "vivintsource" => "v2-vivintsource",
       "satelliteinternet" => "v2-satelliteinternet",
       "usdirect" => "v2-usdirect",
+      "verizonspecials" => "v2-verizonspecials",
 
       // internal
       "safewise" => "v2-safewise",
