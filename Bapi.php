@@ -57,6 +57,7 @@ class Bapi {
 
       // frontier
       "west.frontier" => "v2-west.frontier",
+      "go.frontier" => "v2-go.frontier",
 
       // biz
       "business.frontier" => "v2-business.frontier",
@@ -76,18 +77,23 @@ class Bapi {
       "satelliteinternet" => "v2-satelliteinternet",
       "usdirect" => "v2-usdirect",
       "verizonspecials" => "v2-verizonspecials",
+      "verizon-business"  => "v2-verizon-business",
+      "usdish"  => "v2-usdish",
+      "latino.usdish"  => "v2-latino.usdish",
 
       // internal
       "safewise" => "v2-safewise",
       "wecare.clearlink" => "v2-wecare.clearlink",
-      "ledgestone.texas" => "v2-ledgestone.texas-seniorliving",
+      "ledgestone" => "v2-ledgestone.texas-seniorliving",
+      "elanwestpointe" => "v2-elanwestpointe.texas-seniorliving",
       "dancingriver" => "v2-dancingriver-seniorliving",
       "confluence.clearlink" => "v2-confluence.clearlink",
-      "clearfork.texas" => "v2-clearfork.texas-seniorliving",
+      "clearfork" => "v2-clearfork.texas-seniorliving",
       "arabella-athens" => "v2-arabella-athens-seniorliving",
       "acadiaestates" => "v2-acadiaestates-seniorliving",
-      "highspeedinternet" => "v2-highspeedinternet"
-
+      "highspeedinternet" => "v2-highspeedinternet",
+      "getsafeco" => "v2-getsafeco",
+      "healthcareplans" => "v2-healthcareplans"
     );
 
     try {
